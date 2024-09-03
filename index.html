@@ -107,7 +107,7 @@
         <input type="range" id="lightnessSlider" class="slider" min="0" max="100">
         <input type="number" id="lightnessNumber" class="number-input" min="0" max="100">
     </div>
-    <p class="info-text">Hue는 0-360의 범위 내에서 조정할 수 있습니다.<br>Saturation과 Lightness는 0-100 범위 내에서 조정할 수 있습니다.<br>HSL 색채계에서는 0이 흑색, 50이 회색, 100이 백색입니다.</p>
+    <p class="info-text">Hue는 0-360의 범위 내에서 조정할 수 있습니다.<br>Saturation과 Lightness는 0-100 범위 내에서 조정할 수 있습니다.<br>HSL 색채계에서는 Lightness의 값이 0일 때 흑색, 100일 때 백색입니다.<br>(Lightness가 50일 때는 회색이에요!)</p>
     
     <div class="button-container">
         <button onclick="checkColor()">색상 확인</button>
@@ -225,30 +225,42 @@
         function checkColor() {
             let difficulty = document.getElementById('difficulty').value;
             let tolerance = 10;
+            let difficultyText = '보통';
 
             if (difficulty === 'easy') {
                 tolerance = 15;
+                difficultyText = '쉬움';
             } else if (difficulty === 'hard') {
                 tolerance = 5;
+                difficultyText = '어려움';
             }
 
             let hDiff = targetColor.h - userColor.h;
             let sDiff = targetColor.s - userColor.s;
             let lDiff = targetColor.l - userColor.l;
 
-            let totalDiff = Math.abs(hDiff) + Math.abs(sDiff) + Math.abs(lDiff);
-
-            let resultText;
-
-            if (totalDiff <= tolerance) {
-                resultText = `PERFECT! 눈썰미가 아주 끝내주네요! (난이도: ${difficulty})`;
-            } else {
-                resultText = `차이값: Hue(${hDiff > 0 ? '+' + hDiff : hDiff}), Saturation(${sDiff > 0 ? '+' + sDiff : sDiff}), Lightness(${lDiff > 0 ? '+' + lDiff : lDiff}) (난이도: ${difficulty})`;
+            function getDifferenceText(diff) {
+                if (Math.abs(diff) >= 30) {
+                    return "아주 " + (diff > 0 ? "낮습니다" : "높습니다");
+                } else if (Math.abs(diff) <= 15) {
+                    return "조금 " + (diff > 0 ? "낮습니다" : "높습니다");
+                } else {
+                    return diff > 0 ? "낮습니다" : "높습니다";
+                }
             }
+
+            let resultText = `차이값이 다음과 같습니다.\n`;
+            resultText += `입력된 Hue값이 목표값보다 ${getDifferenceText(hDiff)}.\n`;
+            resultText += `입력된 Saturation값이 목표값보다 ${getDifferenceText(sDiff)}.\n`;
+            resultText += `입력된 Lightness값이 목표값보다 ${getDifferenceText(lDiff)}.\n`;
+            resultText += `(난이도: ${difficultyText})`;
 
             document.getElementById('resultText').innerText = resultText;
 
-            // 기록 저장
+            // 기록 저장 (최대 10개로 제한)
+            if (history.length >= 10) {
+                history.shift(); // 가장 오래된 기록 제거
+            }
             history.push(resultText);
             updateHistory();
         }
