@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSL 색채 맞추기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .color-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px auto;
+        }
+        #targetColor, #userColor {
+            width: 120px;
+            height: 120px;
+            margin: 0 10px;
+            border: 2px solid #000;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .slider-label {
+            width: 70px;
+            text-align: right;
+            margin-right: 10px;
+        }
+        .slider {
+            width: 300px;
+        }
+        .number-input {
+            width: 60px;
+            margin-left: 10px;
+        }
+        .info-text {
+            font-size: 0.9em;
+            color: #666;
+        }
+        #colorWheel {
+            margin: 20px auto;
+            cursor: crosshair;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .button-container button {
+            display: block;
+            width: 150px;
+            margin: 10px auto;
+        }
+        .history-container {
+            margin-top: 20px;
+        }
+        .history-container h2 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .history-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .history-list li {
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        #difficulty {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>HSL 색채 맞추기</h1>
+    
+    <label for="difficulty">난이도 선택:</label>
+    <select id="difficulty">
+        <option value="easy">쉬움 (허용 오차: ±15)</option>
+        <option value="medium" selected>보통 (허용 오차: ±10)</option>
+        <option value="hard">어려움 (허용 오차: ±5)</option>
+    </select>
+
+    <div class="color-container">
+        <div id="targetColor"></div>
+        <div id="userColor"></div>
+    </div>
+    
+    <p>이 색을 맞춰봐!</p>
+
+    <canvas id="colorWheel" width="300" height="300"></canvas>
+    <div class="slider-container">
+        <label for="hueSlider" class="slider-label">Hue</label>
+        <input type="range" id="hueSlider" class="slider" min="0" max="360">
+        <input type="number" id="hueNumber" class="number-input" min="0" max="360">
+    </div>
+    <div class="slider-container">
+        <label for="saturationSlider" class="slider-label">Sat.</label>
+        <input type="range" id="saturationSlider" class="slider" min="0" max="100">
+        <input type="number" id="saturationNumber" class="number-input" min="0" max="100">
+    </div>
+    <div class="slider-container">
+        <label for="lightnessSlider" class="slider-label">Light.</label>
+        <input type="range" id="lightnessSlider" class="slider" min="0" max="100">
+        <input type="number" id="lightnessNumber" class="number-input" min="0" max="100">
+    </div>
+    <p class="info-text">Hue는 0-360의 범위 내에서 조정할 수 있습니다.<br>Saturation과 Lightness는 0-100 범위 내에서 조정할 수 있습니다.<br>HSL 색채계에서는 0이 흑색, 50이 회색, 100이 백색입니다.</p>
+    
+    <div class="button-container">
+        <button onclick="checkColor()">색상 확인</button>
+        <button onclick="showAnswer()">답안지</button>
+        <button onclick="newColor()">새 게임</button>
+    </div>
+    
+    <p id="resultText"></p>
+    <p id="answerText"></p>
+
+    <div class="history-container">
+        <h2>결과 기록</h2>
+        <ul id="historyList" class="history-list"></ul>
+    </div>
+
+    <script>
+        let targetColor = {
+            h: Math.floor(Math.random() * 361),
+            s: Math.floor(Math.random() * 101),
+            l: Math.floor(Math.random() * 101)
+        };
+
+        let userColor = { h: 0, s: 100, l: 50 };
+        let isDragging = false;
+        let history = [];
+
+        function setTargetColor() {
+            document.getElementById('targetColor').style.backgroundColor = `hsl(${targetColor.h}, ${targetColor.s}%, ${targetColor.l}%)`;
+        }
+
+        function newColor() {
+            targetColor = {
+                h: Math.floor(Math.random() * 361),
+                s: Math.floor(Math.random() * 101),
+                l: Math.floor(Math.random() * 101)
+            };
+            setTargetColor();
+            document.getElementById('resultText').innerText = "";
+            document.getElementById('answerText').innerText = "";
+        }
+
+        function drawColorWheel() {
+            const canvas = document.getElementById('colorWheel');
+            const ctx = canvas.getContext('2d');
+            const radius = canvas.width / 2;
+
+            for (let angle = 0; angle < 360; angle++) {
+                const startAngle = (angle - 90) * Math.PI / 180;
+                const endAngle = (angle - 89) * Math.PI / 180;
+
+                ctx.beginPath();
+                ctx.moveTo(radius, radius);
+                ctx.arc(radius, radius, radius, startAngle, endAngle, false);
+                ctx.closePath();
+                ctx.fillStyle = `hsl(${angle}, 100%, 50%)`;
+                ctx.fill();
+            }
+
+            ctx.beginPath();
+            ctx.arc(radius, radius, 5, 0, Math.PI * 2, false);
+            ctx.closePath();
+            ctx.fillStyle = "#fff";
+            ctx.fill();
+        }
+
+        function updateUserColor() {
+            userColor.h = document.getElementById('hueSlider').value;
+            userColor.s = document.getElementById('saturationSlider').value;
+            userColor.l = document.getElementById('lightnessSlider').value;
+            document.getElementById('userColor').style.backgroundColor = `hsl(${userColor.h}, ${userColor.s}%, ${userColor.l}%)`;
+
+            drawColorWheel();
+        }
+
+        function syncSlidersAndNumbers(sliderId, numberId) {
+            let slider = document.getElementById(sliderId);
+            let numberInput = document.getElementById(numberId);
+
+            slider.addEventListener('input', function() {
+                numberInput.value = slider.value;
+                updateUserColor();
+            });
+
+            numberInput.addEventListener('input', function() {
+                slider.value = numberInput.value;
+                updateUserColor();
+            });
+        }
+
+        function updateColorFromWheel(x, y) {
+            const canvas = document.getElementById('colorWheel');
+            const rect = canvas.getBoundingClientRect();
+            const radius = canvas.width / 2;
+            const dx = x - rect.left - radius;
+            const dy = y - rect.top - radius;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance <= radius && distance >= 0) {
+                let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+                angle = (angle + 90) % 360;
+                if (angle < 0) angle += 360;
+                userColor.h = Math.round(angle);
+                userColor.s = Math.round((distance / radius) * 100);
+
+                document.getElementById('hueSlider').value = userColor.h;
+                document.getElementById('saturationSlider').value = userColor.s;
+
+                document.getElementById('hueNumber').value = userColor.h;
+                document.getElementById('saturationNumber').value = userColor.s;
+
+                updateUserColor();
+            }
+        }
+
+        function checkColor() {
+            let difficulty = document.getElementById('difficulty').value;
+            let tolerance = 10;
+
+            if (difficulty === 'easy') {
+                tolerance = 15;
+            } else if (difficulty === 'hard') {
+                tolerance = 5;
+            }
+
+            let hDiff = targetColor.h - userColor.h;
+            let sDiff = targetColor.s - userColor.s;
+            let lDiff = targetColor.l - userColor.l;
+
+            let totalDiff = Math.abs(hDiff) + Math.abs(sDiff) + Math.abs(lDiff);
+
+            let resultText;
+
+            if (totalDiff <= tolerance) {
+                resultText = `PERFECT! 눈썰미가 아주 끝내주네요! (난이도: ${difficulty})`;
+            } else {
+                resultText = `차이값: Hue(${hDiff > 0 ? '+' + hDiff : hDiff}), Saturation(${sDiff > 0 ? '+' + sDiff : sDiff}), Lightness(${lDiff > 0 ? '+' + lDiff : lDiff}) (난이도: ${difficulty})`;
+            }
+
+            document.getElementById('resultText').innerText = resultText;
+
+            // 기록 저장
+            history.push(resultText);
+            updateHistory();
+        }
+
+        function updateHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            history.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${index + 1}: ${item}`;
+                historyList.appendChild(li);
+            });
+        }
+
+        function showAnswer() {
+            let answerText = `주어진 HSL: (${targetColor.h}, ${targetColor.s}%, ${targetColor.l}%)\n당신이 고른 HSL: (${userColor.h}, ${userColor.s}%, ${userColor.l}%)`;
+            document.getElementById('answerText').innerText = answerText;
+        }
+
+        syncSlidersAndNumbers('hueSlider', 'hueNumber');
+        syncSlidersAndNumbers('saturationSlider', 'saturationNumber');
+        syncSlidersAndNumbers('lightnessSlider', 'lightnessNumber');
+
+        const canvas = document.getElementById('colorWheel');
+
+        canvas.addEventListener('mousedown', function(event) {
+            isDragging = true;
+            updateColorFromWheel(event.clientX, event.clientY);
+        });
+
+        canvas.addEventListener('mousemove', function(event) {
+            if (isDragging) {
+                updateColorFromWheel(event.clientX, event.clientY);
+            }
+        });
+
+        canvas.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+
+        canvas.addEventListener('mouseleave', function() {
+            isDragging = false;
+        });
+
+        canvas.addEventListener('touchstart', function(event) {
+            isDragging = true;
+            const touch = event.touches[0];
+            updateColorFromWheel(touch.clientX, touch.clientY);
+        });
+
+        canvas.addEventListener('touchmove', function(event) {
+            if (isDragging) {
+                const touch = event.touches[0];
+                updateColorFromWheel(touch.clientX, touch.clientY);
+            }
+        });
+
+        canvas.addEventListener('touchend', function() {
+            isDragging = false;
+        });
+
+        // 처음 페이지 로드 시 색상 설정
+        setTargetColor();
+        drawColorWheel();
+        updateUserColor();
+    </script>
+</body>
+</html>
