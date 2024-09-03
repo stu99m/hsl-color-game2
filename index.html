@@ -253,7 +253,10 @@
             resultText += `입력된 Hue값이 목표값보다 ${getDifferenceText(hDiff)}.\n`;
             resultText += `입력된 Saturation값이 목표값보다 ${getDifferenceText(sDiff)}.\n`;
             resultText += `입력된 Lightness값이 목표값보다 ${getDifferenceText(lDiff)}.\n`;
-            resultText += `(난이도: ${difficultyText})`;
+            resultText += `(난이도: ${difficultyText})\n`;
+            resultText += `값이 '아주' 다르다면 30 이상으로 차이가 난다는 뜻입니다.\n`;
+            resultText += `값이 '조금' 다르다면 15 이하로 차이가 난다는 뜻입니다.\n`;
+            resultText += `값이 그냥 다르다면 16~29 정도로 차이가 난다는 뜻이겠죠?:D`;
 
             document.getElementById('resultText').innerText = resultText;
 
