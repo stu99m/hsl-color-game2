@@ -250,10 +250,20 @@
                 }
             }
 
-            let resultText = `차이값이 다음과 같습니다.\n\n`;
-            resultText += `입력된 Hue값이 목표값보다 ${getDifferenceText(hDiff)}.\n`;
-            resultText += `입력된 Saturation값이 목표값보다 ${getDifferenceText(sDiff)}.\n`;
-            resultText += `입력된 Lightness값이 목표값보다 ${getDifferenceText(lDiff)}.\n\n`;
+            function getSimpleDifferenceText(diff) {
+                if (Math.abs(diff) >= 30) {
+                    return diff > 0 ? "낮음" : "높음";
+                } else if (Math.abs(diff) <= 15) {
+                    return "조금 " + (diff > 0 ? "낮음" : "높음");
+                } else {
+                    return diff > 0 ? "낮음" : "높음";
+                }
+            }
+
+            let resultText = `차이값이 다음과 같습니다.<br><br>`;
+            resultText += `입력된 Hue값이 목표값보다 ${getDifferenceText(hDiff)}.<br>`;
+            resultText += `입력된 Saturation값이 목표값보다 ${getDifferenceText(sDiff)}.<br>`;
+            resultText += `입력된 Lightness값이 목표값보다 ${getDifferenceText(lDiff)}.<br><br>`;
             resultText += `<span class="explanation-text">*값이 '아주' 다르다면 30 이상으로 차이가 난다는 뜻입니다.<br>`;
             resultText += `*값이 '조금' 다르다면 15 이하로 차이가 난다는 뜻입니다.<br>`;
             resultText += `*값이 그냥 다르다면 16~29 정도로 차이가 난다는 뜻이겠죠?:D</span>`;
@@ -264,7 +274,7 @@
             if (history.length >= 10) {
                 history.shift(); // 가장 오래된 기록 제거
             }
-            let historyText = `Hue ${getDifferenceText(hDiff).split(" ")[0]} 높음, Saturation ${getDifferenceText(sDiff).split(" ")[0]} 높음, Lightness ${getDifferenceText(lDiff).split(" ")[0]} 높음.`;
+            let historyText = `Hue ${getSimpleDifferenceText(hDiff)}, Saturation ${getSimpleDifferenceText(sDiff)}, Lightness ${getSimpleDifferenceText(lDiff)}.`;
             history.push(historyText);
             updateHistory();
         }
