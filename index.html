@@ -1,346 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSL 색채 맞추기</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Resources Hub</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-        }
-        .color-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px auto;
-        }
-        #targetColor, #userColor {
-            width: 120px;
-            height: 120px;
-            margin: 0 10px;
-            border: 2px solid #000;
-        }
-        .slider-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-        .slider-label {
-            width: 70px;
-            text-align: right;
-            margin-right: 10px;
-        }
-        .slider {
-            width: 300px;
-        }
-        .number-input {
-            width: 60px;
-            margin-left: 10px;
-        }
-        .info-text {
-            font-size: 0.9em;
-            color: #666;
-        }
-        #colorWheel {
-            margin: 20px auto;
-            cursor: crosshair;
-        }
-        .button-container {
-            margin-top: 20px;
-        }
-        .button-container button {
-            display: block;
-            width: 150px;
-            margin: 10px auto;
-        }
-        .history-container {
-            margin-top: 20px;
-        }
-        .history-container h2 {
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-        .history-list {
-            list-style-type: none;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .history-list li {
-            margin-bottom: 5px;
-            font-size: 0.9em;
+        header {
+            background: #0073e6;
+            color: white;
+            padding: 10px 0;
+            width: 100%;
+            text-align: center;
         }
-        #difficulty {
-            margin-bottom: 20px;
+        .content {
+            max-width: 800px;
+            margin: 20px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
         }
-        .explanation-text {
-            font-size: 0.8em;
-            color: #888;
+        .link {
+            margin: 10px 0;
+            padding: 10px;
+            background: #e0f7fa;
+            text-align: center;
+            border-radius: 5px;
+        }
+        a {
+            text-decoration: none;
+            color: #0073e6;
+            font-weight: bold;
+        }
+        iframe {
+            margin-top: 20px;
+            border: none;
+        }
+        .playlist {
+            display: none;
+            margin-top: 20px;
+        }
+        .button {
+            margin: 5px;
+            padding: 10px;
+            background: #0073e6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
+    <script>
+        function showPlaylist(id) {
+            document.querySelectorAll('.playlist').forEach(playlist => {
+                playlist.style.display = 'none';
+            });
+            document.getElementById(id).style.display = 'block';
+        }
+    </script>
 </head>
 <body>
-    <h1>HSL 색채 맞추기</h1>
-    
-    <label for="difficulty">난이도 선택:</label>
-    <select id="difficulty">
-        <option value="easy">쉬움 (허용 오차: ±15)</option>
-        <option value="medium" selected>보통 (허용 오차: ±10)</option>
-        <option value="hard">어려움 (허용 오차: ±5)</option>
-    </select>
+    <header>
+        <h1>Class Resources Hub</h1>
+    </header>
+    <div class="content">
+        <h2>수업 자료</h2>
+        <div class="link">
+            <a href="https://your-notion-link-here.com" target="_blank">색채학 수업 자료 열기</a>
+        </div>
+        <div class="link">
+            <a href="https://your-notion-link-here.com" target="_blank">캐드 수업 자료 열기</a>
+        </div>
+        <div class="link">
+            <a href="https://your-notion-link-here.com" target="_blank">기초디자인 수업 자료 열기</a>
+        </div>
+        <div class="link">
+            <a href="https://your-notion-link-here.com" target="_blank">환경디자인 수업 자료 열기</a>
+        </div>
+        <div class="link">
+            <a href="https://your-notion-link-here.com" target="_blank">가상현실 수업 자료 열기</a>
+        </div>
 
-    <div class="color-container">
-        <div id="targetColor"></div>
-        <div id="userColor"></div>
+        <h2>배경 음악</h2>
+        <button class="button" onclick="showPlaylist('playlist1')">편안한 테마</button>
+        <button class="button" onclick="showPlaylist('playlist2')">집중 테마</button>
+        <button class="button" onclick="showPlaylist('playlist3')">활기찬 테마</button>
+
+        <iframe id="playlist1" class="playlist" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX3rxVfibe1L0?utm_source=generator" width="100%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <iframe id="playlist2" class="playlist" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator" width="100%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <iframe id="playlist3" class="playlist" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4sWSpwq3LiO?utm_source=generator" width="100%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
-    
-    <p>이 색을 맞춰봐!</p>
-
-    <canvas id="colorWheel" width="300" height="300"></canvas>
-    <div class="slider-container">
-        <label for="hueSlider" class="slider-label">Hue</label>
-        <input type="range" id="hueSlider" class="slider" min="0" max="360">
-        <input type="number" id="hueNumber" class="number-input" min="0" max="360">
-    </div>
-    <div class="slider-container">
-        <label for="saturationSlider" class="slider-label">Sat.</label>
-        <input type="range" id="saturationSlider" class="slider" min="0" max="100">
-        <input type="number" id="saturationNumber" class="number-input" min="0" max="100">
-    </div>
-    <div class="slider-container">
-        <label for="lightnessSlider" class="slider-label">Light.</label>
-        <input type="range" id="lightnessSlider" class="slider" min="0" max="100">
-        <input type="number" id="lightnessNumber" class="number-input" min="0" max="100">
-    </div>
-    <p class="info-text">Hue는 0-360의 범위 내에서 조정할 수 있습니다.<br>Saturation과 Lightness는 0-100 범위 내에서 조정할 수 있습니다.<br>HSL 색채계에서는 Lightness의 값이 0일 때 흑색, 100일 때 백색입니다.<br>(Lightness가 50일 때는 회색이에요!)</p>
-    
-    <div class="button-container">
-        <button onclick="checkColor()">색상 확인</button>
-        <button onclick="showAnswer()">답안지</button>
-        <button onclick="newColor()">새 게임</button>
-    </div>
-    
-    <p id="resultText"></p>
-    <p id="answerText"></p>
-
-    <div class="history-container">
-        <h2>결과 기록</h2>
-        <ul id="historyList" class="history-list"></ul>
-    </div>
-
-    <script>
-        let targetColor = {
-            h: Math.floor(Math.random() * 361),
-            s: Math.floor(Math.random() * 101),
-            l: Math.floor(Math.random() * 101)
-        };
-
-        let userColor = { h: 0, s: 100, l: 50 };
-        let isDragging = false;
-        let history = [];
-
-        function setTargetColor() {
-            document.getElementById('targetColor').style.backgroundColor = `hsl(${targetColor.h}, ${targetColor.s}%, ${targetColor.l}%)`;
-        }
-
-        function newColor() {
-            targetColor = {
-                h: Math.floor(Math.random() * 361),
-                s: Math.floor(Math.random() * 101),
-                l: Math.floor(Math.random() * 101)
-            };
-            setTargetColor();
-            document.getElementById('resultText').innerText = "";
-            document.getElementById('answerText').innerText = "";
-        }
-
-        function drawColorWheel() {
-            const canvas = document.getElementById('colorWheel');
-            const ctx = canvas.getContext('2d');
-            const radius = canvas.width / 2;
-
-            for (let y = 0; y < canvas.height; y++) {
-                for (let x = 0; x < canvas.width; x++) {
-                    const dx = x - radius;
-                    const dy = y - radius;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance <= radius) {
-                        let angle = Math.atan2(dy, dx) * (180 / Math.PI);
-                        angle = (angle + 360) % 360;
-
-                        const saturation = (distance / radius) * 100;
-                        const lightness = 50;  // 고정된 밝기
-
-                        ctx.fillStyle = `hsl(${angle}, ${saturation}%, ${lightness}%)`;
-                        ctx.fillRect(x, y, 1, 1);
-                    }
-                }
-            }
-        }
-
-        function updateUserColor() {
-            userColor.h = document.getElementById('hueSlider').value;
-            userColor.s = document.getElementById('saturationSlider').value;
-            userColor.l = document.getElementById('lightnessSlider').value;
-            document.getElementById('userColor').style.backgroundColor = `hsl(${userColor.h}, ${userColor.s}%, ${userColor.l}%)`;
-
-            drawColorWheel();
-        }
-
-        function syncSlidersAndNumbers(sliderId, numberId) {
-            let slider = document.getElementById(sliderId);
-            let numberInput = document.getElementById(numberId);
-
-            slider.addEventListener('input', function() {
-                numberInput.value = slider.value;
-                updateUserColor();
-            });
-
-            numberInput.addEventListener('input', function() {
-                slider.value = numberInput.value;
-                updateUserColor();
-            });
-        }
-
-        function updateColorFromWheel(x, y) {
-            const canvas = document.getElementById('colorWheel');
-            const rect = canvas.getBoundingClientRect();
-            const radius = canvas.width / 2;
-            const dx = x - rect.left - radius;
-            const dy = y - rect.top - radius;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance <= radius && distance >= 0) {
-                let angle = Math.atan2(dy, dx) * (180 / Math.PI);
-                angle = (angle + 90) % 360;
-                if (angle < 0) angle += 360;
-                userColor.h = Math.round(angle);
-                userColor.s = Math.round((distance / radius) * 100);
-
-                document.getElementById('hueSlider').value = userColor.h;
-                document.getElementById('saturationSlider').value = userColor.s;
-
-                document.getElementById('hueNumber').value = userColor.h;
-                document.getElementById('saturationNumber').value = userColor.s;
-
-                updateUserColor();
-            }
-        }
-
-        function checkColor() {
-            let difficulty = document.getElementById('difficulty').value;
-            let tolerance = 10;
-
-            if (difficulty === 'easy') {
-                tolerance = 15;
-            } else if (difficulty === 'hard') {
-                tolerance = 5;
-            }
-
-            let hDiff = targetColor.h - userColor.h;
-            let sDiff = targetColor.s - userColor.s;
-            let lDiff = targetColor.l - userColor.l;
-
-            function getDifferenceText(diff) {
-                if (Math.abs(diff) >= 30) {
-                    return "아주 " + (diff > 0 ? "낮습니다" : "높습니다");
-                } else if (Math.abs(diff) <= 15) {
-                    return "조금 " + (diff > 0 ? "낮습니다" : "높습니다");
-                } else {
-                    return diff > 0 ? "낮습니다" : "높습니다";
-                }
-            }
-
-            function getSimpleDifferenceText(diff) {
-                if (Math.abs(diff) >= 30) {
-                    return diff > 0 ? "낮음" : "높음";
-                } else if (Math.abs(diff) <= 15) {
-                    return "조금 " + (diff > 0 ? "낮음" : "높음");
-                } else {
-                    return diff > 0 ? "낮음" : "높음";
-                }
-            }
-
-            let resultText = `차이값이 다음과 같습니다.<br><br>`;
-            resultText += `입력된 Hue값이 목표값보다 ${getDifferenceText(hDiff)}.<br>`;
-            resultText += `입력된 Saturation값이 목표값보다 ${getDifferenceText(sDiff)}.<br>`;
-            resultText += `입력된 Lightness값이 목표값보다 ${getDifferenceText(lDiff)}.<br><br>`;
-            resultText += `<span class="explanation-text">*값이 '아주' 다르다면 30 이상으로 차이가 난다는 뜻입니다.<br>`;
-            resultText += `*값이 '조금' 다르다면 15 이하로 차이가 난다는 뜻입니다.<br>`;
-            resultText += `*값이 그냥 다르다면 16~29 정도로 차이가 난다는 뜻이겠죠?:D</span>`;
-
-            document.getElementById('resultText').innerHTML = resultText;
-
-            // 기록 저장 (최대 10개로 제한)
-            if (history.length >= 10) {
-                history.shift(); // 가장 오래된 기록 제거
-            }
-            let historyText = `Hue ${getSimpleDifferenceText(hDiff)}, Saturation ${getSimpleDifferenceText(sDiff)}, Lightness ${getSimpleDifferenceText(lDiff)}.`;
-            history.push(historyText);
-            updateHistory();
-        }
-
-        function updateHistory() {
-            const historyList = document.getElementById('historyList');
-            historyList.innerHTML = '';
-            history.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.textContent = `${index + 1}: ${item}`;
-                historyList.appendChild(li);
-            });
-        }
-
-        function showAnswer() {
-            let answerText = `주어진 HSL: (${targetColor.h}, ${targetColor.s}%, ${targetColor.l}%)\n당신이 고른 HSL: (${userColor.h}, ${userColor.s}%, ${userColor.l}%)`;
-            document.getElementById('answerText').innerText = answerText;
-        }
-
-        syncSlidersAndNumbers('hueSlider', 'hueNumber');
-        syncSlidersAndNumbers('saturationSlider', 'saturationNumber');
-        syncSlidersAndNumbers('lightnessSlider', 'lightnessNumber');
-
-        const canvas = document.getElementById('colorWheel');
-
-        canvas.addEventListener('mousedown', function(event) {
-            isDragging = true;
-            updateColorFromWheel(event.clientX, event.clientY);
-        });
-
-        canvas.addEventListener('mousemove', function(event) {
-            if (isDragging) {
-                updateColorFromWheel(event.clientX, event.clientY);
-            }
-        });
-
-        canvas.addEventListener('mouseup', function() {
-            isDragging = false;
-        });
-
-        canvas.addEventListener('mouseleave', function() {
-            isDragging = false;
-        });
-
-        canvas.addEventListener('touchstart', function(event) {
-            isDragging = true;
-            const touch = event.touches[0];
-            updateColorFromWheel(touch.clientX, touch.clientY);
-        });
-
-        canvas.addEventListener('touchmove', function(event) {
-            if (isDragging) {
-                const touch = event.touches[0];
-                updateColorFromWheel(touch.clientX, touch.clientY);
-            }
-        });
-
-        canvas.addEventListener('touchend', function() {
-            isDragging = false;
-        });
-
-        // 처음 페이지 로드 시 색상 설정
-        setTargetColor();
-        drawColorWheel();
-        updateUserColor();
-    </script>
 </body>
 </html>
